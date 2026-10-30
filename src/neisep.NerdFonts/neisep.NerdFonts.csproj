@@ -13,6 +13,7 @@
     <PackageTags>nerd-fonts;nerdfonts;icons;glyphs;font;octicons;codicons;font-awesome;material-design</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/neisep/neisep.NerdFonts</PackageProjectUrl>
     <RepositoryUrl>https://github.com/neisep/neisep.NerdFonts</RepositoryUrl>
   </PropertyGroup>
@@ -20,6 +21,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\SymbolsNerdFont-Regular.ttf" LogicalName="neisep.NerdFonts.SymbolsNerdFont-Regular.ttf" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" />
     <None Include="..\..\THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
