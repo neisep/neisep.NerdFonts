@@ -1,0 +1,34 @@
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write   # required for NuGet trusted publishing
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x   # test project targets net10.0
+
+      - run: dotnet test neisep.NerdFonts.slnx -c Release
+
+      - name: Pack
+        run: >
+          dotnet pack src/neisep.NerdFonts/neisep.NerdFonts.csproj -c Release -o out
+          -p:Version=${GITHUB_REF_NAME#v}
+          -p:ContinuousIntegrationBuild=true
+          -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+
+      - uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}   # nuget.org profile name (not email)
+
+      - run: dotnet nuget push "out/*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
