@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/neisep.NerdFonts/neisep.NerdFonts.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/neisep.NerdFonts.Tests/neisep.NerdFonts.Tests.csproj" />
+  </Folder>
+</Solution>

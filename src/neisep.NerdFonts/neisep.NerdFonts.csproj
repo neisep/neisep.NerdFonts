@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <PackageId>neisep.NerdFonts</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>neisep</Authors>
+    <Description>Nerd Fonts icons for .NET: 10,995 icon constants (Octicons, Codicons, Font Awesome, Material Design and more) plus the embedded Symbols Nerd Font. No UI framework dependency.</Description>
+    <PackageTags>nerd-fonts;nerdfonts;icons;glyphs;font;octicons;codicons;font-awesome;material-design</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/neisep/neisep.NerdFonts</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/neisep/neisep.NerdFonts</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SymbolsNerdFont-Regular.ttf" LogicalName="neisep.NerdFonts.SymbolsNerdFont-Regular.ttf" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
