@@ -3,7 +3,11 @@ using System.IO;
 
 namespace neisep.NerdFonts;
 
-/// <summary>The embedded Symbols Nerd Font that renders the icon constants.</summary>
+/// <summary>
+/// The embedded Symbols Nerd Font that renders the icon constants. The font is the work of
+/// Nerd Fonts (https://www.nerdfonts.com) and the upstream icon projects, embedded unmodified under their
+/// own licenses, not this package's MIT license. See THIRD-PARTY-NOTICES.md.
+/// </summary>
 public static partial class NerdFont
 {
     /// <summary>Font family name to use once the font is registered with a UI framework.</summary>

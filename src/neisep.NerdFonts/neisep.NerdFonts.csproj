@@ -7,11 +7,13 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <PackageId>neisep.NerdFonts</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>neisep</Authors>
-    <Description>Nerd Fonts icons for .NET: 10,995 icon constants (Octicons, Codicons, Font Awesome, Material Design and more) plus the embedded Symbols Nerd Font. No UI framework dependency.</Description>
+    <Description>Unofficial .NET integration for Nerd Fonts (not affiliated with or endorsed by Nerd Fonts). 10,995 icon constants plus the embedded, unmodified Symbols Nerd Font v3.5.1. The font and icons are the work of Nerd Fonts and the upstream icon projects (Codicons, Devicons, Font Awesome, Font Logos, Material Design Icons, Octicons, Seti UI, Pomicons, Powerline, Weather Icons and others) under their own licenses: see THIRD-PARTY-NOTICES.md. Only the integration code is MIT. No UI framework dependency.</Description>
+    <Copyright>Integration code (c) 2026 neisep. Symbols Nerd Font and icons (c) Nerd Fonts and their respective creators; see THIRD-PARTY-NOTICES.md.</Copyright>
     <PackageTags>nerd-fonts;nerdfonts;icons;glyphs;font;octicons;codicons;font-awesome;material-design</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReleaseNotes>Licensing and attribution corrections: every bundled icon set's creator, copyright notice and full license text are now included (THIRD-PARTY-NOTICES.md and licenses/). The package license now distinguishes the MIT integration code from the third-party font and icons. README credits the original creators up front, and its links work on nuget.org. No API changes; the font is unchanged.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/neisep/neisep.NerdFonts</PackageProjectUrl>
@@ -23,6 +25,9 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" />
     <None Include="..\..\THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="\" />
+    <!-- Extensionless file: an empty PackagePath packs it at the root as "LICENSE" (NuGet docs). -->
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\..\licenses\*" Pack="true" PackagePath="licenses\" />
   </ItemGroup>
 
 </Project>

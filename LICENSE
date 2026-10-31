@@ -1,3 +1,26 @@
+License scope
+=============
+
+neisep.NerdFonts is an unofficial .NET integration for Nerd Fonts. It contains
+material under several licenses.
+
+1. The MIT License below applies ONLY to the original work of neisep: the C#
+   API, the code generator (tools/), the tests, and the build and packaging
+   files.
+
+2. It does NOT apply to the third-party material this package redistributes:
+   - the Symbols Nerd Font (SymbolsNerdFont-Regular.ttf) and every glyph and
+     icon in it,
+   - the Nerd Fonts glyph-name data the icon constants are generated from,
+   - the icon artwork in the package icon (icon.png).
+   That material was created by Nerd Fonts and the upstream icon projects. It
+   remains under their own licenses (MIT, CC BY 4.0, Apache-2.0, SIL OFL 1.1,
+   Unlicense). See THIRD-PARTY-NOTICES.md and the licenses/ folder, both of
+   which are included in the NuGet package and available at
+   https://github.com/neisep/neisep.NerdFonts
+
+-------------------------------------------------------------------------------
+
 MIT License
 
 Copyright (c) 2026 neisep

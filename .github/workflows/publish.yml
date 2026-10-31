@@ -17,6 +17,12 @@ jobs:
         with:
           dotnet-version: 10.0.x   # test project targets net10.0
 
+      # The README links on nuget.org point at the tag v<Version>; the tests check them against <Version>.
+      - name: Check the tag matches the project version
+        run: |
+          version=$(sed -n 's|.*<Version>\(.*\)</Version>.*|\1|p' src/neisep.NerdFonts/neisep.NerdFonts.csproj)
+          [ "$GITHUB_REF_NAME" = "v$version" ] || { echo "::error::Tag $GITHUB_REF_NAME does not match <Version>$version</Version>"; exit 1; }
+
       - run: dotnet test neisep.NerdFonts.slnx -c Release
 
       - name: Pack
@@ -25,6 +31,17 @@ jobs:
           -p:Version=${GITHUB_REF_NAME#v}
           -p:ContinuousIntegrationBuild=true
           -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+
+      - name: Verify license and attribution files are in the package
+        run: |
+          missing=0
+          for pkg in out/*.nupkg; do
+            listing=$(unzip -Z1 "$pkg")
+            for f in LICENSE README.md THIRD-PARTY-NOTICES.md icon.png licenses/*; do
+              grep -qxF "$f" <<< "$listing" || { echo "::error::$f is missing from $pkg"; missing=1; }
+            done
+          done
+          exit $missing
 
       - uses: NuGet/login@v1
         id: login
