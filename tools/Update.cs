@@ -142,7 +142,8 @@ await File.WriteAllTextAsync(Path.Combine(libDir, "NerdFont.g.cs"),
 
 Console.WriteLine($"Generated {glyphs.Count} icons from Nerd Fonts v{version}.");
 Console.WriteLine("Now review THIRD-PARTY-NOTICES.md against licenses/NerdFonts-SymbolsOnly-README.md, and every changed file in licenses/");
-Console.WriteLine("(then update its hash in tests/neisep.NerdFonts.Tests/NoticeTests.cs); the tests fail until both are done.");
+Console.WriteLine("(then update its hash in tests/neisep.NerdFonts.Tests/NoticeTests.cs), and data/glyphnames.json (then update its hash");
+Console.WriteLine("in tests/neisep.NerdFonts.Tests/IconTests.cs); the tests fail until all are done.");
 return 0;
 
 static void Extract(ZipArchive archive, string entryName, string destination)

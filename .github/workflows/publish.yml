@@ -12,8 +12,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262   # v4.4.0
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9   # v4.3.1
         with:
           dotnet-version: 10.0.x   # test project targets net10.0
 
@@ -23,27 +23,19 @@ jobs:
           version=$(sed -n 's|.*<Version>\(.*\)</Version>.*|\1|p' src/neisep.NerdFonts/neisep.NerdFonts.csproj)
           [ "$GITHUB_REF_NAME" = "v$version" ] || { echo "::error::Tag $GITHUB_REF_NAME does not match <Version>$version</Version>"; exit 1; }
 
-      - run: dotnet test neisep.NerdFonts.slnx -c Release
+      # Build once with the release properties; pack reuses that build, so the tested DLL is the shipped DLL.
+      - run: dotnet test neisep.NerdFonts.slnx -c Release -p:ContinuousIntegrationBuild=true
 
       - name: Pack
         run: >
-          dotnet pack src/neisep.NerdFonts/neisep.NerdFonts.csproj -c Release -o out
-          -p:Version=${GITHUB_REF_NAME#v}
+          dotnet pack src/neisep.NerdFonts/neisep.NerdFonts.csproj -c Release -o out --no-build
           -p:ContinuousIntegrationBuild=true
           -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
-      - name: Verify license and attribution files are in the package
-        run: |
-          missing=0
-          for pkg in out/*.nupkg; do
-            listing=$(unzip -Z1 "$pkg")
-            for f in LICENSE README.md THIRD-PARTY-NOTICES.md icon.png licenses/*; do
-              grep -qxF "$f" <<< "$listing" || { echo "::error::$f is missing from $pkg"; missing=1; }
-            done
-          done
-          exit $missing
+      - name: Verify the package contents and metadata
+        run: tools/verify-package.sh out
 
-      - uses: NuGet/login@v1
+      - uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841   # v1.2.0
         id: login
         with:
           user: ${{ secrets.NUGET_USER }}   # nuget.org profile name (not email)

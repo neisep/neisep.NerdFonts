@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -7,8 +8,22 @@ namespace neisep.NerdFonts.Tests;
 
 public class IconTests
 {
-    private static readonly JsonElement GlyphNames =
-        JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "glyphnames.json"))).RootElement;
+    private static readonly string GlyphNamesPath = Path.Combine(AppContext.BaseDirectory, "glyphnames.json");
+
+    private static readonly JsonElement GlyphNames = JsonDocument.Parse(File.ReadAllText(GlyphNamesPath)).RootElement;
+
+    /// <summary>
+    /// SHA-256 of data/glyphnames.json as downloaded by tools/Update.cs from Nerd Fonts v3.5.1. The other tests derive the
+    /// expected constants from this file, so an edit to it alone would go unnoticed. After an update, review the change, then
+    /// update this hash.
+    /// </summary>
+    private const string ReviewedGlyphNamesSha256 = "d2fa6615a38eb527462cb71ff17aa44b1d6453d437ed263ab8d5b458393669e8";
+
+    [Fact]
+    public void Glyph_names_are_the_reviewed_upstream_file() =>
+        Assert.True(
+            ReviewedGlyphNamesSha256 == Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(GlyphNamesPath))).ToLowerInvariant(),
+            $"data/glyphnames.json changed. Review it against the upstream release, then update {nameof(ReviewedGlyphNamesSha256)}.");
 
     private static IEnumerable<FieldInfo> IconFields() =>
         typeof(NerdFont).Assembly.GetExportedTypes()

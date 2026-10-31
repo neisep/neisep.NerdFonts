@@ -85,12 +85,13 @@ AppBuilder.Configure<App>()
 
 ## WPF
 
-**1. Register the font** in `App.xaml.cs`:
+**1. Register the font** in `App.xaml.cs`. Extract it to a folder your app can write to: the install folder is read-only under Program Files and for MSIX packages.
 
 ```csharp
 protected override void OnStartup(StartupEventArgs e)
 {
-    var path = NerdFont.ExtractTo(Path.Combine(AppContext.BaseDirectory, "fonts"));
+    var fonts = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyApp", "fonts");
+    var path = NerdFont.ExtractTo(fonts);
     Resources["NerdFont"] = new FontFamily(new Uri(path), "./#" + NerdFont.FamilyName);
     base.OnStartup(e);
 }
@@ -105,14 +106,15 @@ protected override void OnStartup(StartupEventArgs e)
 
 ## WinForms
 
-**1. Register the font** once, for example in `Program.cs`. Keep `fonts` alive while the app runs:
+**1. Register the font** once, for example in `Program.cs`, into a folder your app can write to (as for WPF). Keep `fonts` alive while the app runs:
 
 ```csharp
 using System.Drawing.Text;
 using neisep.NerdFonts;
 
+var fontDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyApp", "fonts");
 var fonts = new PrivateFontCollection();
-fonts.AddFontFile(NerdFont.ExtractTo(Path.Combine(AppContext.BaseDirectory, "fonts")));
+fonts.AddFontFile(NerdFont.ExtractTo(fontDirectory));
 var nerdFont = new Font(fonts.Families[0], 24);
 ```
 
@@ -140,7 +142,7 @@ The prefix becomes the class, the rest becomes PascalCase. Hover a constant in y
 dotnet run tools/Update.cs -- 3.5.1
 ```
 
-This downloads the font, the glyph names and the upstream license texts (into `licenses/`). Then review `THIRD-PARTY-NOTICES.md` against `licenses/NerdFonts-SymbolsOnly-README.md`. The tests fail until the notices cover every icon set with its upstream license, record the new font's SHA-256, and every changed license file has been reviewed and its hash updated in `tests/neisep.NerdFonts.Tests/NoticeTests.cs`.
+This downloads the font, the glyph names and the upstream license texts (into `licenses/`). Then review `THIRD-PARTY-NOTICES.md` against `licenses/NerdFonts-SymbolsOnly-README.md`. The tests fail until the notices cover every icon set with its upstream license, record the new font's SHA-256, and every changed license file has been reviewed and its hash updated in `tests/neisep.NerdFonts.Tests/NoticeTests.cs` (and the glyph names' hash in `tests/neisep.NerdFonts.Tests/IconTests.cs`).
 
 ## License
 
