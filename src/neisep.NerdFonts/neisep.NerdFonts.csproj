@@ -13,7 +13,7 @@
     <Copyright>Integration code (c) 2026 neisep. Symbols Nerd Font and icons (c) Nerd Fonts and their respective creators; see THIRD-PARTY-NOTICES.md.</Copyright>
     <PackageTags>nerd-fonts;nerdfonts;icons;glyphs;font;octicons;codicons;font-awesome;material-design</PackageTags>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageReleaseNotes>Licensing and attribution corrections: every bundled icon set's creator, copyright notice and full license text are now included (THIRD-PARTY-NOTICES.md and licenses/). The package license now distinguishes the MIT integration code from the third-party font and icons. README credits the original creators up front, and its links work on nuget.org. No API changes; the font is unchanged.</PackageReleaseNotes>
+    <PackageReleaseNotes>Licensing and attribution corrections: every bundled icon set's creator, copyright notice and full license text are now included (THIRD-PARTY-NOTICES.md and licenses/). The package license now distinguishes the MIT integration code from the third-party font and icons. README credits the original creators up front, and its links work on nuget.org. ExtractTo now replaces corrupt or different existing font files, including files of the same length. No API changes; the font is unchanged.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/neisep/neisep.NerdFonts</PackageProjectUrl>

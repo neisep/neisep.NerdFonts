@@ -69,6 +69,78 @@ public class NoticeTests
     ];
 
     [Fact]
+    public void Summary_preserves_original_creator_credits()
+    {
+        var expected = new Dictionary<string, string[]>(StringComparer.Ordinal)
+        {
+            ["Nerd Fonts (font, glyph names, original icons)"] = ["Ryan L McIntyre", "Nerd Fonts contributors"],
+            ["Codicons"] = ["Microsoft Corporation"],
+            ["Devicons"] = ["konpa", "devicon contributors", "Theodore Vorillas"],
+            ["Extra glyphs (progress indicators, heavy angle brackets)"] = ["Nerd Fonts contributors", "Source Foundry Authors"],
+            ["Font Awesome Free"] = ["Fonticons, Inc."],
+            ["Font Awesome Extension"] = ["André Luiz Gava"],
+            ["Font Logos"] = ["Lukas W"],
+            ["Material Design Icons"] = ["Pictogrammers"],
+            ["Octicons"] = ["GitHub, Inc."],
+            ["Seti UI and Nerd Fonts originals"] = ["Jesse Weed", "Nerd Fonts contributors"],
+            ["Pomicons"] = ["Davide Bignotti", "Gabriele Lana"],
+            ["Powerline Extra Symbols"] = ["Ryan L McIntyre"],
+            ["Powerline Symbols"] = ["Kim Silkebækken", "contributors"],
+            ["IEC Power Symbols"] = ["Joe Loughry"],
+            ["Weather Icons"] = ["Erik Flowers", "Lukas Bischoff"],
+        };
+        var summary = SummaryRows().ToDictionary(row => row["Icon set"], StringComparer.Ordinal);
+
+        Assert.All(expected, set =>
+            Assert.All(set.Value, creator => Assert.Contains(creator, summary[set.Key]["Created by / ©"])));
+    }
+
+    [Fact]
+    public void Notices_preserve_reviewed_copyright_and_attribution()
+    {
+        string[] required =
+        [
+            "Copyright (c) 2014 Ryan L McIntyre",
+            "Copyright (c) 2015 konpa",
+            "Copyright (c) 2018 Source Foundry Authors",
+            "Copyright (c) 2003 by Bitstream, Inc. All Rights Reserved. Bitstream Vera is a trademark of Bitstream, Inc.",
+            "Copyright 2023 Fonticons, Inc.",
+            "Copyright 2026 Fonticons, Inc.",
+            "Copyright (c) 2017 André Luiz Gava",
+            "Copyright (c) 2014-2026, Lukas W",
+            "Copyright (c) 2023 GitHub Inc.",
+            "Copyright (c) 2014 Jesse Weed",
+            "Copyright (c) 2021, Gabriele Lana gabriele.lana@gmail.com with Reserved Font Name Pomicons.",
+            "Copyright (c) 2014 by Davide Bignotti. All rights reserved.",
+            "Pomicons is a trademark of Davide Bignotti.",
+            "Copyright (c) 2016 Ryan L McIntyre",
+            "Copyright 2013 Kim Silkebækken and other contributors",
+            "Copyright (c) 2013 Joe Loughry",
+            "Larry Ewing (lewing@isc.tamu.edu) using The GIMP",
+        ];
+
+        Assert.All(required, notice => Assert.Contains(notice, Notices));
+    }
+
+    [Fact]
+    public void Readme_preserves_creator_credits()
+    {
+        var start = Readme.IndexOf("## Credits", StringComparison.Ordinal);
+        var end = Readme.IndexOf("## What it does", StringComparison.Ordinal);
+        Assert.InRange(start, 0, end);
+        var credits = Readme[start..end];
+        string[] creators =
+        [
+            "Ryan L McIntyre", "Nerd Fonts contributors", "Microsoft", "devicon contributors", "Theodore Vorillas",
+            "Fonticons, Inc.", "André Luiz Gava", "Lukas W", "Pictogrammers", "GitHub", "Jesse Weed",
+            "Davide Bignotti", "Gabriele Lana", "Kim Silkebækken", "Joe Loughry", "Erik Flowers",
+            "Lukas Bischoff", "Source Foundry Authors",
+        ];
+
+        Assert.All(creators, creator => Assert.Contains(creator, credits));
+    }
+
+    [Fact]
     public void Summary_covers_every_icon_set_in_the_upstream_table()
     {
         var credited = SummaryRows().Select(row => row["Nerd Fonts table name"]).ToHashSet(StringComparer.Ordinal);

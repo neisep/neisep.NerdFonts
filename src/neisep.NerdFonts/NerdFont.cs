@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace neisep.NerdFonts;
 
@@ -36,8 +38,18 @@ public static partial class NerdFont
         var path = Path.Combine(directory, FileName);
 
         using var source = OpenStream();
-        if (File.Exists(path) && new FileInfo(path).Length == source.Length)
-            return path;
+        if (File.Exists(path))
+        {
+            using var existing = File.OpenRead(path);
+            if (existing.Length == source.Length)
+            {
+                using var hash = SHA256.Create();
+                if (hash.ComputeHash(existing).SequenceEqual(hash.ComputeHash(source)))
+                    return path;
+
+                source.Position = 0;
+            }
+        }
 
         using var target = File.Create(path);
         source.CopyTo(target);
