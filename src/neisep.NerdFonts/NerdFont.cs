@@ -1,9 +1,15 @@
 using System;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace neisep.NerdFonts;
 
-/// <summary>The embedded Symbols Nerd Font that renders the icon constants.</summary>
+/// <summary>
+/// The embedded Symbols Nerd Font that renders the icon constants. The font is the work of
+/// Nerd Fonts (https://www.nerdfonts.com) and the upstream icon projects, embedded unmodified under their
+/// own licenses, not this package's MIT license. See THIRD-PARTY-NOTICES.md.
+/// </summary>
 public static partial class NerdFont
 {
     /// <summary>Font family name to use once the font is registered with a UI framework.</summary>
@@ -32,8 +38,18 @@ public static partial class NerdFont
         var path = Path.Combine(directory, FileName);
 
         using var source = OpenStream();
-        if (File.Exists(path) && new FileInfo(path).Length == source.Length)
-            return path;
+        if (File.Exists(path))
+        {
+            using var existing = File.OpenRead(path);
+            if (existing.Length == source.Length)
+            {
+                using var hash = SHA256.Create();
+                if (hash.ComputeHash(existing).SequenceEqual(hash.ComputeHash(source)))
+                    return path;
+
+                source.Position = 0;
+            }
+        }
 
         using var target = File.Create(path);
         source.CopyTo(target);

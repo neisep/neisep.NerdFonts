@@ -32,11 +32,41 @@ public class FontTests
         try
         {
             var path = NerdFont.ExtractTo(directory);
-            using var stream = NerdFont.OpenStream();
-
             Assert.Equal(Path.Combine(directory, NerdFont.FileName), path);
-            Assert.Equal(stream.Length, new FileInfo(path).Length);
+            Assert.Equal(ReadFontBytes(), File.ReadAllBytes(path));
+
+            File.SetLastWriteTimeUtc(path, new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+            var written = File.GetLastWriteTimeUtc(path);
             Assert.Equal(path, NerdFont.ExtractTo(directory));
+            Assert.Equal(written, File.GetLastWriteTimeUtc(path));
+            Assert.Equal(ReadFontBytes(), File.ReadAllBytes(path));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(0)]
+    [InlineData(1)]
+    public void ExtractTo_replaces_a_different_file(int lengthDifference)
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "neisep.NerdFonts.Tests", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        try
+        {
+            var expected = ReadFontBytes();
+            var corrupt = new byte[expected.Length + lengthDifference];
+            Array.Copy(expected, corrupt, Math.Min(expected.Length, corrupt.Length));
+            // Corrupt the final byte so a same-length file must be checked all the way through.
+            corrupt[^1] ^= 0xFF;
+            var path = Path.Combine(directory, NerdFont.FileName);
+            File.WriteAllBytes(path, corrupt);
+
+            Assert.Equal(path, NerdFont.ExtractTo(directory));
+            Assert.Equal(expected, File.ReadAllBytes(path));
         }
         finally
         {
@@ -50,6 +80,14 @@ public class FontTests
     [InlineData("  ")]
     public void ExtractTo_rejects_a_missing_directory(string? directory) =>
         Assert.Throws<ArgumentException>(() => NerdFont.ExtractTo(directory!));
+
+    private static byte[] ReadFontBytes()
+    {
+        using var stream = NerdFont.OpenStream();
+        using var buffer = new MemoryStream();
+        stream.CopyTo(buffer);
+        return buffer.ToArray();
+    }
 
     /// <summary>Reads the font family names (name ID 1) from the TrueType 'name' table.</summary>
     private static List<string> ReadFamilyNames(byte[] font)
